@@ -36,20 +36,25 @@ npm run dev
 
 Or use any static file server.
 
-### Customizing the sample team
+### Loading your own team
 
-The "Load sample" button reads from `sample-team.js` by default. To use a
-different team locally without committing it, create `sample-team.local.js`:
+Click **Upload CSV** in the form header and pick a file with `Name,City`
+columns:
 
-```js
-export const SAMPLE_TEAM = [
-  ["Alice", "Berlin"],
-  ["Bob",   "Toronto"],
-  // ...
-];
+```csv
+Name,City
+Alice,Berlin
+Bob,Toronto
 ```
 
-`sample-team.local.js` is gitignored. When present, it overrides the default.
+Extra columns are ignored. The parser handles quoted fields, embedded commas,
+and recognizes header rows that mention `name`, `city`, `location`, or `home`.
+If no header is present, columns 1 and 2 are used. Files matching `*.local.csv`
+are gitignored, so you can keep a `team.local.csv` in the repo for quick
+re-loading without it showing up in `git status`.
+
+The **Load sample** button always loads the committed generic team from
+`sample-team.js` — handy for demos.
 
 ### Regenerating routes.js
 

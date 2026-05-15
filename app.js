@@ -558,24 +558,80 @@ clearBtn.addEventListener("click", () => {
   clearError();
 });
 
-async function loadSampleTeam() {
-  // Prefer a local override (gitignored) so contributors can keep a private team
-  // without modifying the committed default.
-  try {
-    const local = await import("./sample-team.local.js");
-    if (local?.SAMPLE_TEAM) return local.SAMPLE_TEAM;
-  } catch {
-    // No local override present — fall through to the committed default.
+sampleBtn.addEventListener("click", async () => {
+  const { SAMPLE_TEAM } = await import("./sample-team.js");
+  teamList.innerHTML = "";
+  SAMPLE_TEAM.forEach(([n, c]) => makeMemberRow(n, c));
+  clearError();
+});
+
+// Minimal RFC-4180-style CSV parser: handles quoted fields, embedded commas
+// and newlines, escaped quotes (""), BOM, and both \n and \r\n line endings.
+function parseCSV(text) {
+  text = text.replace(/^﻿/, "");
+  const rows = [];
+  let row = [], field = "", inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQuotes) {
+      if (c === '"') {
+        if (text[i + 1] === '"') { field += '"'; i++; }
+        else inQuotes = false;
+      } else field += c;
+    } else if (c === '"') {
+      inQuotes = true;
+    } else if (c === ",") {
+      row.push(field); field = "";
+    } else if (c === "\n" || c === "\r") {
+      if (c === "\r" && text[i + 1] === "\n") i++;
+      row.push(field); field = "";
+      if (row.some(v => v !== "")) rows.push(row);
+      row = [];
+    } else field += c;
   }
-  const def = await import("./sample-team.js");
-  return def.SAMPLE_TEAM;
+  if (field !== "" || row.length) { row.push(field); if (row.some(v => v !== "")) rows.push(row); }
+  return rows;
 }
 
-sampleBtn.addEventListener("click", async () => {
-  const sample = await loadSampleTeam();
-  teamList.innerHTML = "";
-  sample.forEach(([n, c]) => makeMemberRow(n, c));
-  clearError();
+function parseTeamCSV(text) {
+  const rows = parseCSV(text);
+  if (!rows.length) return [];
+  // Header detection: if any header cell mentions name/city/location, use it.
+  const first = rows[0].map(s => s.trim().toLowerCase());
+  const headerLike = first.some(s => /name|city|location|home/.test(s));
+  let nameIdx = 0, cityIdx = 1, dataStart = 0;
+  if (headerLike) {
+    const ni = first.findIndex(s => /\bname\b/.test(s));
+    const ci = first.findIndex(s => /city|location|home/.test(s));
+    if (ni !== -1) nameIdx = ni;
+    if (ci !== -1) cityIdx = ci;
+    dataStart = 1;
+  }
+  return rows.slice(dataStart)
+    .map(r => [(r[nameIdx] || "").trim(), (r[cityIdx] || "").trim()])
+    .filter(([n, c]) => n || c);
+}
+
+const uploadInput = document.getElementById("upload-csv");
+uploadInput.addEventListener("change", async e => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  try {
+    const text = await file.text();
+    const team = parseTeamCSV(text);
+    if (!team.length) {
+      showError("Couldn't find any rows in that CSV. Expected columns like Name,City.");
+      return;
+    }
+    teamList.innerHTML = "";
+    team.forEach(([n, c]) => makeMemberRow(n, c));
+    clearError();
+  } catch (err) {
+    showError(`Failed to read CSV: ${err.message}`);
+  } finally {
+    // Reset so re-selecting the same file fires another change event.
+    uploadInput.value = "";
+  }
 });
 
 computeBtn.addEventListener("click", () => {

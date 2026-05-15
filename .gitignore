@@ -1,3 +1,4 @@
-sample-team.local.js
+*.local.csv
+*.local.js
 .DS_Store
 node_modules/

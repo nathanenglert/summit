@@ -30,7 +30,12 @@
     <section class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-xl font-semibold text-slate-900">Team members</h2>
-        <div class="flex gap-2 text-sm">
+        <div class="flex gap-2 text-sm items-center">
+          <label for="upload-csv" class="text-indigo-600 hover:text-indigo-700 hover:underline cursor-pointer">
+            Upload CSV
+          </label>
+          <input id="upload-csv" type="file" accept=".csv,text/csv" class="hidden" />
+          <span class="text-slate-300">|</span>
           <button id="load-sample"
                   class="text-indigo-600 hover:text-indigo-700 hover:underline">Load sample</button>
           <span class="text-slate-300">|</span>
@@ -41,6 +46,7 @@
 
       <p class="text-sm text-slate-500 mb-4">
         Enter the city or major metro nearest each person. Free-text — e.g. "Seattle", "London", "São Paulo", or an IATA code like "DXB".
+        Or upload a CSV with <code class="text-xs bg-slate-100 px-1 py-0.5 rounded">Name,City</code> columns.
       </p>
 
       <div id="team-list" class="space-y-2 mb-4"></div>
