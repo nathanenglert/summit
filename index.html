@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Summit — Find the best city for your team gathering</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html, body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    .gradient-bg {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+
+  <header class="gradient-bg text-white">
+    <div class="max-w-5xl mx-auto px-6 py-12">
+      <h1 class="text-4xl md:text-5xl font-bold tracking-tight">Summit</h1>
+      <p class="mt-3 text-lg text-indigo-100 max-w-2xl">
+        Find the cities that are easiest for your whole team to fly into.
+        Add everyone's home city, and Summit ranks the best meeting spots by
+        total travel time, direct-flight availability, and fairness across travelers.
+      </p>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 py-10">
+
+    <section class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-semibold text-slate-900">Team members</h2>
+        <div class="flex gap-2 text-sm">
+          <button id="load-sample"
+                  class="text-indigo-600 hover:text-indigo-700 hover:underline">Load sample</button>
+          <span class="text-slate-300">|</span>
+          <button id="clear-all"
+                  class="text-slate-500 hover:text-slate-700 hover:underline">Clear</button>
+        </div>
+      </div>
+
+      <p class="text-sm text-slate-500 mb-4">
+        Enter the city or major metro nearest each person. Free-text — e.g. "Seattle", "London", "São Paulo", or an IATA code like "DXB".
+      </p>
+
+      <div id="team-list" class="space-y-2 mb-4"></div>
+
+      <div class="flex items-center justify-between mt-4">
+        <button id="add-member"
+                class="text-sm text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-1">
+          <span class="text-lg leading-none">+</span> Add another member
+        </button>
+        <button id="compute"
+                class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-lg shadow-sm transition-colors">
+          Find best summit cities
+        </button>
+      </div>
+
+      <div id="error" class="hidden mt-4 rounded-md bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3"></div>
+    </section>
+
+    <section id="results" class="mt-8"></section>
+
+    <footer class="mt-12 text-center text-xs text-slate-400 space-y-1">
+      <p>Travel estimates use great-circle distance + cruise speed. For connecting itineraries, the best 1-stop hub is selected and a 2h layover is added.</p>
+      <p>Direct-flight data: <a href="https://github.com/jpatokal/openflights" class="underline hover:text-slate-600" target="_blank" rel="noopener">OpenFlights routes</a>. Static snapshot, not live schedules.</p>
+    </footer>
+  </main>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
