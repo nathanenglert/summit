@@ -2,9 +2,15 @@
 // filters to direct routes whose endpoints are both in our AIRPORTS list,
 // and writes routes.js exporting a Set of "ORIG-DEST" strings (bidirectional).
 //
-// Run with: node build-routes.js
+// Prereq: curl -fsSL -o /tmp/routes.dat https://raw.githubusercontent.com/jpatokal/openflights/master/data/routes.dat
+// Run with: npm run build-routes  (or: node scripts/build-routes.js from project root)
 import { readFileSync, writeFileSync } from "node:fs";
-import { AIRPORTS } from "./airports.js";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
+import { AIRPORTS } from "../airports.js";
+
+const here = dirname(fileURLToPath(import.meta.url));
+const ROUTES_OUT = join(here, "..", "routes.js");
 
 const iataSet = new Set(AIRPORTS.map(a => a.iata));
 
@@ -39,10 +45,10 @@ const out =
   `// ${sorted.length} directed pairs across ${iataSet.size} airports.\n` +
   `export const DIRECT_ROUTES = new Set(${JSON.stringify(sorted)});\n`;
 
-writeFileSync("./routes.js", out);
+writeFileSync(ROUTES_OUT, out);
 
 console.log(`OpenFlights routes parsed: ${lines.length}`);
 console.log(`Direct (stops=0): ${totalDirect}`);
 console.log(`Kept (both endpoints in AIRPORTS): ${kept}`);
 console.log(`Unique directed pairs written: ${sorted.length}`);
-console.log(`Output: ./routes.js`);
+console.log(`Output: ${ROUTES_OUT}`);

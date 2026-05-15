@@ -1,5 +1,11 @@
 {
   "name": "summit",
   "private": true,
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "dev": "python3 -m http.server 8765",
+    "build-routes": "node scripts/build-routes.js",
+    "audit": "node scripts/audit-coverage.js",
+    "fetch-data": "mkdir -p /tmp && curl -fsSL -o /tmp/routes.dat https://raw.githubusercontent.com/jpatokal/openflights/master/data/routes.dat && curl -fsSL -o /tmp/airports.dat https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports.dat"
+  }
 }

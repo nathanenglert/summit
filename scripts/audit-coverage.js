@@ -1,8 +1,10 @@
 // One-shot audit: find airports NOT in our list that would be the most valuable
 // to add — ranked by how many OpenFlights direct routes touch them.
-// Usage: node audit-coverage.js
+//
+// Prereqs: /tmp/airports.dat and /tmp/routes.dat from OpenFlights.
+// Usage: npm run audit  (or: node scripts/audit-coverage.js)
 import { readFileSync } from "node:fs";
-import { AIRPORTS } from "./airports.js";
+import { AIRPORTS } from "../airports.js";
 
 const inList = new Set(AIRPORTS.map(a => a.iata));
 
