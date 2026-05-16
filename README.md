@@ -133,14 +133,6 @@ Be aware of what Summit is and isn't:
 - **No live data, no booking links.** Summit is a *which city should we
   meet in* tool, not a *book my trip* tool.
 
-## Deploying to GitHub Pages
-
-The repo is configured to serve as-is — no Actions workflow needed.
-
-1. Push to GitHub
-2. **Settings → Pages → Source:** `main` branch, `/` (root)
-3. Visit `https://<user>.github.io/<repo>/`
-
 ## Contributing
 
 Contributions welcome, especially the easy ones:
