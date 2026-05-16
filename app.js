@@ -291,13 +291,15 @@ const clearBtn = document.getElementById("clear-all");
 
 function makeMemberRow(name = "", city = "") {
   const row = document.createElement("div");
-  row.className = "flex gap-2 items-center";
+  row.className = "flex gap-2 items-start bg-slate-50 rounded-lg p-3 sm:bg-transparent sm:rounded-none sm:p-0";
   row.innerHTML = `
-    <input type="text" placeholder="Name" value="${escapeHtml(name)}"
-           class="member-name flex-1 rounded-md border border-slate-300 px-3 py-2 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none" />
-    <input type="text" placeholder="City (e.g. Seattle, London, Tokyo)" value="${escapeHtml(city)}"
-           class="member-city flex-[2] rounded-md border border-slate-300 px-3 py-2 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none" />
-    <button class="remove-row text-slate-400 hover:text-red-500 px-2 py-1 text-xl leading-none" title="Remove">&times;</button>
+    <div class="flex-1 min-w-0 grid grid-cols-1 sm:grid-cols-3 gap-1.5 sm:gap-2">
+      <input type="text" placeholder="Name" value="${escapeHtml(name)}"
+             class="member-name min-w-0 sm:col-span-1 rounded-md border border-slate-300 bg-white px-3 py-2 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none" />
+      <input type="text" placeholder="City (e.g. Seattle, London, Tokyo)" value="${escapeHtml(city)}"
+             class="member-city min-w-0 sm:col-span-2 rounded-md border border-slate-300 bg-white px-3 py-2 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none" />
+    </div>
+    <button class="remove-row shrink-0 text-slate-400 hover:text-red-500 px-2 py-2 text-xl leading-none self-center" title="Remove">&times;</button>
   `;
   row.querySelector(".remove-row").addEventListener("click", () => {
     row.remove();
@@ -399,23 +401,23 @@ function renderResults(ranked, team) {
     <table class="w-full text-sm">
       <thead class="bg-slate-50 text-slate-600 text-xs uppercase tracking-wide">
         <tr>
-          <th class="px-4 py-2 text-left">#</th>
-          <th class="px-4 py-2 text-left">City</th>
-          <th class="px-4 py-2 text-left">Airport</th>
-          <th class="px-4 py-2 text-right">Avg time</th>
-          <th class="px-4 py-2 text-right">Worst</th>
-          <th class="px-4 py-2 text-right">Direct</th>
+          <th class="px-2 sm:px-4 py-2 text-left">#</th>
+          <th class="px-2 sm:px-4 py-2 text-left">City</th>
+          <th class="hidden sm:table-cell px-4 py-2 text-left">Airport</th>
+          <th class="px-2 sm:px-4 py-2 text-right whitespace-nowrap">Avg</th>
+          <th class="px-2 sm:px-4 py-2 text-right whitespace-nowrap">Worst</th>
+          <th class="px-2 sm:px-4 py-2 text-right whitespace-nowrap">Direct</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-slate-100">
         ${top.map((r, i) => `
           <tr class="hover:bg-indigo-50/40 cursor-pointer" data-idx="${i}">
-            <td class="px-4 py-2 text-slate-500">${i + 1}</td>
-            <td class="px-4 py-2 font-medium text-slate-900">${escapeHtml(r.candidate.city)}<span class="text-slate-400 font-normal">, ${escapeHtml(r.candidate.country)}</span></td>
-            <td class="px-4 py-2 text-slate-600">${r.candidate.iata}</td>
-            <td class="px-4 py-2 text-right">${formatHours(r.avg)}</td>
-            <td class="px-4 py-2 text-right">${formatHours(r.max)}</td>
-            <td class="px-4 py-2 text-right">${r.directCount}/${team.length}</td>
+            <td class="px-2 sm:px-4 py-2 text-slate-500">${i + 1}</td>
+            <td class="px-2 sm:px-4 py-2 font-medium text-slate-900">${escapeHtml(r.candidate.city)}<span class="text-slate-400 font-normal">, ${escapeHtml(r.candidate.country)}</span><span class="sm:hidden text-slate-400 font-normal"> · ${r.candidate.iata}</span></td>
+            <td class="hidden sm:table-cell px-4 py-2 text-slate-600">${r.candidate.iata}</td>
+            <td class="px-2 sm:px-4 py-2 text-right whitespace-nowrap">${formatHours(r.avg)}</td>
+            <td class="px-2 sm:px-4 py-2 text-right whitespace-nowrap">${formatHours(r.max)}</td>
+            <td class="px-2 sm:px-4 py-2 text-right whitespace-nowrap">${r.directCount}/${team.length}</td>
           </tr>
         `).join("")}
       </tbody>
@@ -513,21 +515,21 @@ function renderDetail(result, rank) {
       <table class="w-full text-sm">
         <thead class="bg-slate-50 text-slate-600 text-xs uppercase tracking-wide">
           <tr>
-            <th class="px-4 py-2 text-left">Traveler</th>
-            <th class="px-4 py-2 text-left">From</th>
-            <th class="px-4 py-2 text-left">Routing</th>
-            <th class="px-4 py-2 text-right">Distance</th>
-            <th class="px-4 py-2 text-right">Est. door-to-door</th>
+            <th class="px-2 sm:px-4 py-2 text-left">Traveler</th>
+            <th class="px-2 sm:px-4 py-2 text-left">From</th>
+            <th class="px-2 sm:px-4 py-2 text-left">Routing</th>
+            <th class="hidden sm:table-cell px-4 py-2 text-right whitespace-nowrap">Distance</th>
+            <th class="px-2 sm:px-4 py-2 text-right whitespace-nowrap">Travel time</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
           ${result.perMember.map(m => `
             <tr>
-              <td class="px-4 py-2 font-medium text-slate-900">${escapeHtml(m.name)}</td>
-              <td class="px-4 py-2 text-slate-600">${escapeHtml(m.fromCity)} (${m.fromIata})</td>
-              <td class="px-4 py-2">${formatRouting(m)}</td>
-              <td class="px-4 py-2 text-right text-slate-600">${Math.round(m.km * KM_TO_MI).toLocaleString()} mi</td>
-              <td class="px-4 py-2 text-right">${formatHours(m.hours)}</td>
+              <td class="px-2 sm:px-4 py-2 font-medium text-slate-900">${escapeHtml(m.name)}</td>
+              <td class="px-2 sm:px-4 py-2 text-slate-600">${escapeHtml(m.fromCity)} <span class="text-slate-400">(${m.fromIata})</span></td>
+              <td class="px-2 sm:px-4 py-2">${formatRouting(m)}</td>
+              <td class="hidden sm:table-cell px-4 py-2 text-right text-slate-600 whitespace-nowrap">${Math.round(m.km * KM_TO_MI).toLocaleString()} mi</td>
+              <td class="px-2 sm:px-4 py-2 text-right whitespace-nowrap">${formatHours(m.hours)}</td>
             </tr>
           `).join("")}
         </tbody>
